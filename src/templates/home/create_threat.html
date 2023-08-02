@@ -1,0 +1,115 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Load Vocabulary {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+  <div class="py-4">
+      <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
+          <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
+              <li class="breadcrumb-item">
+                  <a href="#">
+                      <svg class="icon icon-xxs" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                  </a>
+              </li>
+              <li class="breadcrumb-item"><a href="#">Threat Copilot</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Create Threat</li>
+          </ol>
+      </nav>
+      <div class="d-flex justify-content-between w-100 flex-wrap">
+          <div class="mb-3 mb-lg-0">
+              <h1 class="h4">Create Threat</h1>
+              <p class="mb-0">Insert new threat data</p>
+          </div>
+      </div>
+  </div>
+
+  <div class="row">
+      <div class="col-12 mb-4">
+          <div class="card border-0 shadow components-section">
+              <div class="card-body">     
+                  <div class="row mb-4">
+                      <div class="col-lg-4 col-sm-6">
+                          <!-- Form -->
+                          {% if form_result is none %}
+                          
+                          {% else %}
+                          <div>
+                            <button class="btn btn-success" id="successAlert">{{form_result}}</button>
+                          </div>
+                          {% endif %}
+                          <form action="/createthreat" method="POST">
+                            <!-- Form -->
+
+                            <div class="mb-3">
+                                <label for="firstName">Catalog</label>
+                                <input type="text" class="form-control" id="catalog" name="catalog" required>
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div> 
+                            </div>
+                            <div class="mb-3">
+                            <label for="firstName">Category</label>
+                            <input type="text" class="form-control" id="category" name="category" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div> 
+                            </div>
+                            <div class="mb-3">
+                                <label for="firstName">STRIDE</label>
+                                <select class="form-select" name ="stride" id="stride" aria-label="Select STRIDE">
+
+                                    <option selected>Open this select menu</option>
+                                        <option value="Spoofing">S - Spoofing</option>
+                                        <option value="Tampering">T - Tampering</option>
+                                        <option value="Repudiation">R - Repudiation</option>
+                                        <option value="InformationDisclosure">I - Information Disclosure</option>
+                                        <option value="DenialOfService">D - Denial Of Service</option>
+                                        <option value="ElevationOPrivilege">E - Elevation Of Privilege</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="firstName">ThreatID</label>
+                                <input type="text" class="form-control" id="threatid" name="threatid" required>
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div> 
+                            </div>
+                            <div class="mb-3">
+                                <label for="firstName">Name</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div> 
+                            </div>
+                            <div class="mb-4">
+                                <label for="email">Description</label>
+                                <textarea class="form-control" placeholder="" id="description" name="description" rows="5"></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="firstName">CVE</label>
+                                <input type="text" class="form-control" id="cve" name="cve" required>
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div> 
+                            </div>
+                            <div>
+                                <button class="btn btn-lg btn-primary" type="submit">Create</button>
+                            </div>
+                            <!-- End of Form -->
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

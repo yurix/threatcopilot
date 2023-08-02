@@ -1,0 +1,68 @@
+---
+name: Exemplo_1
+package: org.threatcookbook.example3
+version: 1
+threat_model_uid: org.threatcookbook.example3.tm1
+
+interactors:
+  Users:
+    term: remote user
+    description: empty
+  Librarians:
+    term: remote user
+    description: empty
+
+processes:
+  CollegeLibraryWebSite:
+    term: webserver
+    description: empty
+
+stores:
+  CollegeLibraryDatabase:
+    term: Mysql
+    description: empty
+  DiskWebPages:
+    term: file
+    description: empty
+
+dataflows:
+  UsersToCollegeLibraryWebSite:
+    source_uid: org.threatcookbook.example3.Users
+    destination_uid: org.threatcookbook.example3.CollegeLibraryWebSite
+    description: Requests
+    term: http
+  LibraryWebSiteToUsers:
+    source_uid: org.threatcookbook.example3.CollegeLibraryWebSite
+    destination_uid: org.threatcookbook.example3.Users
+    description: Responses
+    term: http
+  LibrariansToCollegeLibraryWebSite:
+    source_uid: org.threatcookbook.example3.Librarians
+    destination_uid: org.threatcookbook.example3.CollegeLibraryWebSite
+    term: http
+    description: Requests
+  CollegeLibraryWebSiteToLibrarians:
+    source_uid: org.threatcookbook.example3.CollegeLibraryWebSite
+    destination_uid: org.threatcookbook.example3.Librarians
+    term: http
+    description: Responses
+  CollegeLibraryWebSiteToCollegeDatabase:
+    source_uid: org.threatcookbook.example3.CollegeLibraryWebSite
+    destination_uid: org.threatcookbook.example3.CollegeLibraryDatabase
+    description: SQL
+    term: socket
+  CollegeDatabaseToLibraryWebSite:
+    source_uid: org.threatcookbook.example3.CollegeLibraryDatabase
+    destination_uid: org.threatcookbook.example3.CollegeLibraryWebSite
+    term: socket
+    description: Data
+  DiskPagesToCollegeLibraryWebSite:
+    source_uid: org.threatcookbook.example3.DiskWebPages
+    destination_uid: org.threatcookbook.example3.CollegeLibraryWebSite
+    description: Requests
+    term: memory
+  LibraryWebSiteToDiskPages:
+    source_uid: org.threatcookbook.example3.CollegeLibraryWebSite
+    destination_uid: org.threatcookbook.example3.DiskWebPages
+    description: Responses
+    term: memory

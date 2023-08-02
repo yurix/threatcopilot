@@ -1,0 +1,20 @@
+{
+    "name": "threat-copilot",
+    "mastertemplate": "threat-copilot",
+    "version": "0.0.1",
+    "description": "Threat Copilot",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/"
+    },
+    "bugs": {
+        "url": "https:/",
+        "email": "yurinegocio@gmail.com"
+    },
+    "author": "Yuri Feitosa Negócio",
+    "engines": {
+        "node": ">=10.0.0"
+    },
+    "dependencies": {},
+    "devDependencies": {}
+}

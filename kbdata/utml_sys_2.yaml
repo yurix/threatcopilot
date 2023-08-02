@@ -1,0 +1,42 @@
+---
+name: Exemplo_SYS2
+package: org.tc.ex2
+version: 1
+threat_model_uid: org.tc.ex2.sys2
+
+interactors:
+  Employee:
+    term: local user
+    description: empty
+
+processes:
+  HumanResourceApplication:
+    term: webserver
+    description: empty
+
+stores:
+  HRDatabase:
+    term: oracle
+    description: empty
+
+dataflows:
+  EmployeeToHumanResourceApplication:
+    source_uid: org.tc.ex2.Employee
+    destination_uid: org.tc.ex2.HumanResourceApplication
+    description: Requests
+    term: http
+  HumanResourceApplicationToEmployee:
+    source_uid: org.tc.ex2.HumanResourceApplication
+    destination_uid: org.tc.ex2.Employee
+    description: Responses
+    term: http
+  HumanResourceApplicationToHRDatabase:
+    source_uid: org.tc.ex2.HumanResourceApplication
+    destination_uid: org.tc.ex2.HRDatabase
+    description: Data Request
+    term: socket
+  HRDatabaseToHumanResourceApplication:
+    source_uid: org.tc.ex2.HRDatabase
+    destination_uid: org.tc.ex2.HumanResourceApplication
+    description: Data Response
+    term: socket

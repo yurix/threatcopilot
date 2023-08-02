@@ -1,0 +1,27 @@
+---
+name: Exemplo_Sys_1
+package: org.tc.ex1
+version: 1
+threat_model_uid: org.tc.ex1.sys1
+
+interactors:
+  Users:
+    term: remote user
+    description: empty
+
+processes:
+  ApplicationWebSite:
+    term: webserver
+    description: empty
+
+dataflows:
+  UsersToApplicationWebSite:
+    source_uid: org.tc.ex1.Users
+    destination_uid: org.tc.ex1.ApplicationWebSite
+    description: Requests
+    term: http
+  ApplicationWebSiteToUsers:
+    source_uid: org.tc.ex1.ApplicationWebSite
+    destination_uid: org.tc.ex1.Users
+    description: Responses
+    term: http

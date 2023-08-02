@@ -1,0 +1,164 @@
+name: Global DFD Vocabulary
+version: 1
+interactors:
+  - name: user
+    children:
+      - name: remote user
+      - name: local user
+      - name: mobile user
+  - name: program
+    children:
+      - name: bot
+      - name: browser
+      - name: smart tv
+      - name: android application
+      - name: ios application
+      - name: smartphone application
+      - name: operating system
+  - name: device
+    children:
+      - name: usb
+      - name: smartphone
+      - name: printer
+      - name: input
+        children:
+          - name: keyboard
+          - name: pin pad
+          - name: key pad
+          - name: otp
+          - name: card
+          - name: tag
+      - name: sensor
+        children:
+          - name: gps sensor
+          - name: temperature sensor
+          - name: humidity sensor
+          - name: velocity sensor
+          - name: soil sensor
+      - name: actuator
+      - name: iot node
+  - name: event
+processes:
+  - name: server
+    children:
+      - name: frontend
+      - name: backend
+      - name: webserver
+  - name: business component
+    children:
+      - name: API
+      - name: EJB
+      - name: Web Service 
+  - name: network appliance
+    children:
+      - name: proxy
+      - name: load balancer
+      - name: router
+      - name: web application firewall
+      - name: firewall
+flows:
+  - name: memory
+  - name: network_protocol
+    children:
+      - name: socket
+      - name: application
+        children:
+          - name: http
+          - name: soap
+          - name: rest
+          - name: ftp
+          - name: sftp
+          - name: tftp
+          - name: rtp
+          - name: rtps
+          - name: smtp
+          - name: pop3
+          - name: imap
+          - name: imaps
+          - name: dns
+          - name: ssh
+          - name: scp
+          - name: smb
+          - name: ldap
+          - name: telnet
+          - name: snmp
+          - name: ntp
+          - name: sip
+          - name: rdp
+          - name: vnc
+          - name: irc
+          - name: nntp
+          - name: xmpp
+          - name: mqtt
+          - name: bittorrent
+          - name: dnssec
+          - name: radius
+          - name: pptp
+          - name: mgcp
+          - name: ssdp
+          - name: afp
+          - name: nfs
+          - name: coap
+          - name: bolt
+          - name: obd2
+          - name: rfid
+          - name: rs232
+stores:
+  - name: file
+    children:
+      - name: plain
+        children:
+          - name: xml
+          - name: binary
+          - name: json
+          - name: yaml
+          - name: txt
+          - name: sql
+          - name: csv
+          - name: tsv
+      - name: binary
+        children:
+          - name: compacted
+            children:
+              - name: zip
+              - name: tar
+              - name: 7z
+              - name: rar
+              - name: tar
+              - name: gz
+          - name: bson
+  - name: database
+    children:
+      - name: graph
+        children:
+          - name: Neo4j
+          - name: Amazon Neptune
+          - name: Janus Graph
+      - name: relational
+        children:
+          - name: PostgreSQL
+          - name: Oracle
+          - name: Mysql
+          - name: MariaDB
+          - name: DB2
+          - name: Cockroach
+          - name: SQLServer
+      - name: document
+        children:
+          - name: MongoDB
+          - name: FerretDB
+      - name: keyvalue
+        children:
+          - name: redis
+          - name: riak
+      - name: message queue
+        children:
+          - name: apache activemq
+          - name: cloudamqp
+          - name: rabbitmq
+          - name: apache kafka
+          - name: apache qpid
+          - name: amazon sqs
+          - name: zero mq
+          - name: google coud pubsub
+          - name: azure mq
