@@ -1,3 +1,5 @@
+docker/neo4japoc/plugins/apoc.jar
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

@@ -11,6 +11,7 @@ config.DATABASE_URL = Config.NEO4J_URL
 from src.home.threatmodel_service import ThreatModelService
 from src.home.element_service import ElementService
 import src.home.util as util
+import src.home.util_similarity as util_similarity
 
 
 from nltk.corpus import wordnet as wn
@@ -85,16 +86,10 @@ class ThreatUnit:
         print( "Similarity term = " + str(sim_term))
         sim_io = self.sim_input_and_outputs(self.input_terms, another_threat_unit.input_terms, self.output_terms, another_threat_unit.output_terms)
         print( " Similarity io = " + str(sim_io))
-        return  (8 * sim_name + 5 * sim_term + 2 * sim_io)/15
+        return  sim_name, sim_term, sim_io, (8 * sim_name + 5 * sim_term + 2 * sim_io)/15
     
     def sim_name(self, name_a, name_b):
-        synset_a = wn.synsets(self.split_element_name(name_a))
-        synset_b = wn.synsets(self.split_element_name(name_b))
-        if synset_a is None or synset_b is None or len(synset_a) == 0 or len(synset_b) == 0:
-            return 0
-        synset_a = synset_a[0]
-        synset_b = synset_b[0]
-        return synset_a.lin_similarity(synset_b, self.brown_ic)
+        return util_similarity.compound_lin_similarity(name_a,name_b)
 
     def sim_term(self, term_a, term_b):
         x, vector_a = self.tree_term.tree2array(term_a)
@@ -138,27 +133,11 @@ class ThreatUnit:
                 output_sim = output_sim + output_max
             
             output_sim = output_sim / output_n
-
-        return input_sim + output_sim
+        
+        return (input_sim + output_sim)/2
     
-    def split_element_name(self,name):
-        return name
-        parts = []
-        start = 0
-
-        for index, letter in enumerate(name):
-            if letter.isupper():
-                parts.append(name[start:index])
-                start = index
-
-        parts.append(name[start:])
-        result = ''
-        for part in parts: 
-            result = result + " " + part
-        return result
-
     def __str__(self):
-        return f"Name: {self.name}, Element Type: {self.element_type}, Term: {self.term}"
+        return f"[Name: {self.name}, Element Type: {self.element_type}, Term: {self.term}]"
 
 
 
@@ -216,7 +195,7 @@ class RecommendationService:
         for tm_tu in threat_model_threat_units:
             for x_tu in all_threat_units:
                 if tm_tu.element_type == x_tu.element_type:
-                    similarity = tm_tu.similarity(x_tu)
+                    sim_name, sim_term, sim_io, similarity = tm_tu.similarity(x_tu)
                     print("Comparando " + str(tm_tu) + " com " + str(x_tu) + " : " + str(similarity))
                     if similarity>0:
                         threats = ElementService().find_element_threats(x_tu.element_type, x_tu.uid)
@@ -228,6 +207,9 @@ class RecommendationService:
                                     "element_name": tm_tu.name, 
                                     "threat_uid": threat['ThreatID'], 
                                     "threat_name": threat['Name'], 
+                                    "sim_name": sim_name,
+                                    "sim_term": sim_term,
+                                    "sim_io": sim_io,
                                     "similarity": similarity
                                 }
                                 recommended_threats.append(recommended_threat)

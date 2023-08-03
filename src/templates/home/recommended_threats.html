@@ -72,7 +72,9 @@
                   <th class="border-gray-200">Type</th>
                   <th class="border-gray-200">Threat ID</th>
                   <th class="border-gray-200">Threat Name</th>			
-                  
+                  <th class="border-gray-200">Score Name</th>
+                  <th class="border-gray-200">Score Term</th>
+                  <th class="border-gray-200">Score IO</th>
                   <th class="border-gray-200">Score</th>
                   <th class="border-gray-200">Action</th>
               </tr>
@@ -91,7 +93,10 @@
                       </a>
                   </td>
                   <td><span class="fw-normal">{% if threat['threat_name'] is not none %}{{threat['threat_name'][:100]}}{% endif %}</span></td>                        
-                  <td><span class="fw-bold">{% if threat['similarity'] is not none %}{{threat['similarity']|float(3)}}{% endif %}</span></td>
+                  <td><span class="fw-bold">{% if threat['sim_name'] is not none %}{{threat['sim_name']|round(3)}}{% endif %}</span></td>
+                  <td><span class="fw-bold">{% if threat['sim_term'] is not none %}{{threat['sim_term']|round(3)}}{% endif %}</span></td>
+                  <td><span class="fw-bold">{% if threat['sim_io'] is not none %}{{threat['sim_io']|round(3)}}{% endif %}</span></td>
+                  <td><span class="fw-bold">{% if threat['similarity'] is not none %}{{threat['similarity']|round(3)}}{% endif %}</span></td>
                   <td><span class="fw-bold text-warning"><a href="/show/Threat/ThreatID/{{threat['threat_uid']}}">Details</a> </span></td>
                       
               </tr>
