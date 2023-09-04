@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+ 
+ 
+  threatcopilot:
+    container_name: threatcopilot
+    build: .
+    ports:
+      - "5005:5005"
+    networks:
+      - db_network
+      - web_network
+
+networks:
+  db_network:
+    driver: bridge
+  web_network:
+    driver: bridge
+    
+    

@@ -7,9 +7,7 @@ from importlib import import_module
 
 import nltk
 
-nltk.download('wordnet')
-nltk.download('omw')
-nltk.download('wordnet_ic')
+
 
 
 db = SQLAlchemy()

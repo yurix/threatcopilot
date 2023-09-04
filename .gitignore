@@ -1,4 +1,7 @@
-docker/neo4japoc/plugins/apoc.jar
+
+neo4japoc/plugins/apoc.jar
+kbdataprotected/
+dockerdev/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

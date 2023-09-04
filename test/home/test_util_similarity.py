@@ -11,6 +11,15 @@ def array_equals(array1, array2):
 
 
 class TestUtilSimilarity:
+
+    def test_pre_process_portuguese(self):
+        print (util_similarity.pre_process('Os dias de março são mais quentes que os de fevereiro'))
+        assert len(util_similarity.pre_process('Os dias de março são mais quentes que os de fevereir')) == 4
+
+    def test_pre_process_english(self):
+        assert len(util_similarity.pre_process('System of a Down')) == 3
+
+
     def test_lin_similarity(self):
         assert util_similarity.lin_similarity('car','car') == 1.0
         assert util_similarity.lin_similarity('car','truck') == 0.8994141506517801

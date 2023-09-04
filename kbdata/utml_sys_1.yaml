@@ -5,14 +5,37 @@ version: 1
 threat_model_uid: org.tc.ex1.sys1
 
 interactors:
-  Users:
+  Cidadao:
     term: remote user
     description: empty
 
 processes:
-  ApplicationWebSite:
+  AplicativoCTPS:
     term: webserver
     description: empty
+  APIGateway:
+    term: webserver
+    description: empty
+  SistemaOperacional:
+    term: webserver
+    description: empty
+  ServidorCTPS:
+    term: webserver
+    description: empty
+  CNIS_PF:
+    term: webserver
+    description: empty
+  Extrato_CNIS:
+    term: webserver
+    description: empty
+  ESocial:
+    term: webserver
+    description: empty
+
+stores:
+  CTPSDigital:
+    term: file
+    description: arquivo contendo informações da carteira de trabalho
 
 dataflows:
   UsersToApplicationWebSite:

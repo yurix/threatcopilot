@@ -9,8 +9,55 @@ from neomodel import db
 
 from src.home.vocabulary_model import Vocabulary, DataFlowVocabulary, StoreVocabulary, InteractorVocabulary, ProcessVocabulary, DataFlowTerm, StoreTerm, InteractorTerm, ProcessTerm
 from src.home.vocabulary_service import VocabularyService
+from src.home.element_service import ElementService
+import src.home.util as util
 
 config.DATABASE_URL = Config.NEO4J_URL
+
+
+class DFDRelation:
+    def __init__(self, name, term, description, end_dfid, end_full_name, end_name, end_term, end_dtype):
+        self.name = name
+        self.term = term
+        self.description = description
+        self.end_dfid = end_dfid
+        self.end_full_name = end_full_name
+        self.end_name = end_name
+        self.end_term = end_term
+        self.end_dtype = end_dtype
+        print (self.end_full_name)
+
+class DFDNode:
+    def __init__(self, dfid, full_name, name, dtype,term):
+        self.dfid = dfid
+        self.full_name = full_name
+        self.name = name
+        self.dtype = dtype
+        self.term = term
+        self.relations = []
+
+    def add_relation(self, relation):
+        self.relations.append(relation)
+
+def get_letter_by_name(node_list, name):
+    for node in node_list:
+        if node.name == name: 
+            return node.dfid
+    return 'NULL'
+
+def next_letter(sequencia):
+    sequencia = sequencia.upper()
+    
+    num = 0
+    for char in sequencia:
+        num = num * 26 + (ord(char) - ord('A') + 1)
+    num += 1
+    nova_sequencia = ""
+    while num > 0:
+        num, rem = divmod(num - 1, 26)
+        nova_sequencia = chr(rem + ord('A')) + nova_sequencia
+    
+    return nova_sequencia
 
 
 class ThreatModelService:
@@ -47,9 +94,52 @@ class ThreatModelService:
         query = f"MATCH (t:ThreatModel {{ threat_model_uid: '{threat_model_uid}' }})-[o:OWNS]->(w) RETURN w"
         results, meta = db.cypher_query(query, resolve_objects=resolve_objects)
         return results
-
-
     
+    def render_dfd(self, threat_model_uid):
+        threatmodel = self.find_by_id(threat_model_uid,resolve_objects=True)
+        dfdnodes = self.walk_elements(threat_model_uid)
+        for dfdnode in dfdnodes:
+            print (dfdnode.dfid)
+        return dfdnodes
+
+    def walk_elements(self, threat_model_uid):
+        elements = self.find_threatmodel_elements(threat_model_uid, resolve_objects=True)
+        dfdnodes = []
+        sequence = 'A'
+        for var in elements:
+            for element in var: 
+                if element.dtype != 'DataFlow':
+                   dfdnode = DFDNode(sequence,element.full_name, element.name, element.dtype, element.term)
+                   dfdnodes.append(dfdnode)
+                   sequence = next_letter(sequence)
+        
+        
+        self.create_dfd_relations(dfdnodes)
+        return dfdnodes
+    
+    def create_dfd_relations(self, dfdnodes):
+        for dfdnode in dfdnodes:
+
+            output_dataflows = ElementService().find_element_outputs(dfdnode.full_name,resolve_objects=True)
+            output_terms = []
+
+            if util.safe_is_not_empty_list(output_dataflows):
+                for var in output_dataflows:
+                    for df in var: 
+                        df_objs = ElementService().find_element_outputs_elements(df.full_name,True)
+                        output_destination = df_objs[0][0]
+                        dfdnode.add_relation ( DFDRelation(
+                            df.name, 
+                            df.term, 
+                            df.description, 
+
+                            get_letter_by_name(dfdnodes, output_destination.name), 
+                            output_destination.full_name, 
+                            output_destination.name, 
+                            output_destination.term, 
+                            output_destination.dtype) )       
+        
+
     def find_threatmodel_elements_with_query(self, threat_model_uid, query):
         query = f"MATCH (t:ThreatModel {{ threat_model_uid: '{threat_model_uid}' }})-[o:OWNS]->(w) RETURN w"
         results, meta = db.cypher_query(query, resolve_objects=False)
@@ -95,7 +185,7 @@ class ThreatModelService:
             for dataflow in dataflows:
                 name = dataflow
                 attr = dataflows[name]
-                print (attr)
+                #print (attr)
                 managed_df = DataFlow.nodes.get_or_none(full_name=self.threatmodel.package + '.' + name)
                 source_node = self.find_in_all_dfd_nodes(attr['source_uid'])
                
@@ -106,7 +196,7 @@ class ThreatModelService:
                 managed_df.output_destination.connect(destination_node)
                 destination_node.input_sources.connect(managed_df)
 
-                print ("Connecting input source " + attr['source_uid'] + " to "  + attr['destination_uid'])
+                #print ("Connecting input source " + attr['source_uid'] + " to "  + attr['destination_uid'])
 
     def parse_interactors(self, interactors, managed_interactors):
         if interactors:
@@ -173,6 +263,5 @@ class ThreatModelService:
                 result = Store.nodes.get_or_none(full_name=full_name)
 
         return result
-
-
+    
                 

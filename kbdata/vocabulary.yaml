@@ -11,10 +11,11 @@ interactors:
       - name: bot
       - name: browser
       - name: smart tv
-      - name: android application
-      - name: ios application
-      - name: smartphone application
-      - name: operating system
+  - name: service
+    children:
+      - name: remote service
+      - name: local service
+
   - name: device
     children:
       - name: usb
@@ -41,21 +42,38 @@ interactors:
 processes:
   - name: server
     children:
-      - name: frontend
-      - name: backend
-      - name: webserver
-  - name: business component
+      - name: web server
+      - name: application server
+      - name: proxy
+        children:
+          - name: API Gateway
+          - name: Web Application Firewall
+          - name: Load Balancer
+          - name: Router
+  - name: application
+    children:
+      - name: mobile application
+        children:
+          - name: android application
+          - name: ios application
+      - name: cloud application
+      - name: desktop application
+      - name: embbeded application
+  - name: operating system
+    children:
+      - name: Linux Operating System
+      - name: Windows Operating System
+      - name: MACOS Operating System
+  - name: integration
     children:
       - name: API
       - name: EJB
       - name: Web Service 
-  - name: network appliance
+      - name: Enterprise Service Bus
+  - name: network security
     children:
-      - name: proxy
-      - name: load balancer
-      - name: router
-      - name: web application firewall
       - name: firewall
+
 flows:
   - name: memory
   - name: network_protocol
@@ -103,6 +121,10 @@ flows:
           - name: obd2
           - name: rfid
           - name: rs232
+          - name: rmi
+          - name: t3
+          - name: iiop-rmi
+          - name: iiop
 stores:
   - name: file
     children:

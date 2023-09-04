@@ -480,17 +480,18 @@ def elements(threat_model_uid):
         query = None
         if request.method == 'GET': 
             elements = ThreatModelService().find_threatmodel_elements(threat_model_uid)
-            print(elements)
         else:
             query = request.form['query']
             elements = ThreatModelService().find_threatmodel_elements_with_query(threat_model_uid, query)
+        
+        nodes_dfd = ThreatModelService().render_dfd(threat_model_uid)
 
         if util.safe_is_not_empty_list(elements): 
             total = len(elements[0])
         else: 
             total = 0
         
-        return render_template("home/elements.html",elements=elements, total=total, last_query=query)
+        return render_template("home/elements.html",elements=elements, total=total, last_query=query, nodes_dfd=nodes_dfd)
 
     except Exception as e:
         traceback.print_exc()

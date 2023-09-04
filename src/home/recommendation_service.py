@@ -34,6 +34,41 @@ class Tree:
 
     def set_root(self, root_node):
         self.root = root_node
+    
+    def get_node_by_name(self, root_node, node_name):
+        if root_node is not None:
+            for child in root_node.children:
+                if child.name == node_name:
+                    return child
+                else:
+                    deep_search = self.get_node_by_name(child,node_name)
+                    if deep_search is not None:
+                        return deep_search
+        return None
+    
+    def depth(self):
+        return calculate_depth(self.root)
+    
+    def calculate_depth(self, node):
+        if node is None:
+            return 0
+        else:
+            max_depth = 0
+            for child in node.children:
+                child_depth = self.calculate_depth(child)
+                max_depth = max(max_depth, child_depth)
+            return max_depth + 1
+    def calculate_weights(self):
+        return self.build_wtree(self.root,0,[])
+    
+    def build_wtree(self, node, level, w_array):
+        if node is None:
+            return w_array
+        else:
+            for child in node.children:
+                w_array.append(level)
+                w_array = self.build_wtree(child, level + 1, w_array)
+            return w_array
 
     def display_tree(self, node, level=0):
         if node is not None:
@@ -86,21 +121,25 @@ class ThreatUnit:
         print( "Similarity term = " + str(sim_term))
         sim_io = self.sim_input_and_outputs(self.input_terms, another_threat_unit.input_terms, self.output_terms, another_threat_unit.output_terms)
         print( " Similarity io = " + str(sim_io))
-        return  sim_name, sim_term, sim_io, (8 * sim_name + 5 * sim_term + 2 * sim_io)/15
+        return  sim_name, sim_term, sim_io, (3 * sim_name + 7 * sim_term + 5 * sim_io)/15
     
     def sim_name(self, name_a, name_b):
-        return util_similarity.compound_lin_similarity(name_a,name_b)
+        return util_similarity.compound_name_similarity(name_a,name_b)
 
     def sim_term(self, term_a, term_b):
         x, vector_a = self.tree_term.tree2array(term_a)
         y, vector_b = self.tree_term.tree2array(term_b)
-        cosine_sim = distance.cosine(vector_a,vector_b)      
+
+        weights = self.tree_term.calculate_weights()
+        cosine_sim = distance.cosine(vector_a,vector_b,weights)      
 
         return (1-cosine_sim)
     def sim_dataflow_term(self, term_a, term_b):
         x, vector_a = self.dataflow_tree.tree2array(term_a)
         y, vector_b = self.dataflow_tree.tree2array(term_b)
-        cosine_sim = distance.cosine(vector_a,vector_b)      
+        weights = self.dataflow_tree.calculate_weights()
+
+        cosine_sim = distance.cosine(vector_a,vector_b,weights)      
 
         return (1-cosine_sim)
     
@@ -197,10 +236,11 @@ class RecommendationService:
                 if tm_tu.element_type == x_tu.element_type:
                     sim_name, sim_term, sim_io, similarity = tm_tu.similarity(x_tu)
                     print("Comparando " + str(tm_tu) + " com " + str(x_tu) + " : " + str(similarity))
-                    if similarity>0:
+                    if similarity>0.4:
                         threats = ElementService().find_element_threats(x_tu.element_type, x_tu.uid)
                         for x in threats:
                             for threat in x:
+                                print ('Threat for: ' + tm_tu.uid)
                                 recommended_threat = {
                                     "element_uid": tm_tu.uid, 
                                     "element_type": tm_tu.element_type, 
@@ -216,8 +256,15 @@ class RecommendationService:
 
         recommended_threats = sorted(recommended_threats, key=lambda k: k['similarity'], reverse=True) 
 
-        print (recommended_threats)
-        return recommended_threats
+        cleaned_threats = []
+        if len(recommended_threats)>0:
+            for rthreat in recommended_threats:
+                exists = any(( item["threat_uid"] == rthreat['threat_uid'] and  item["element_uid"] == rthreat['element_uid']) for item in cleaned_threats)
+                if not exists:
+                    cleaned_threats.append(rthreat)
+
+        
+        return cleaned_threats
     
     def threat_model_threat_units(self, threat_model_uid):
         elements = ThreatModelService().find_threatmodel_elements(threat_model_uid, resolve_objects=True)

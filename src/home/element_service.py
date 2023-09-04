@@ -65,6 +65,12 @@ class ElementService:
         results, meta = db.cypher_query(query, resolve_objects=resolve_objects)
         return results
 
+    def find_element_outputs_elements(self, element_full_name, resolve_objects=False):
+        query = f"MATCH (d:DataFlow {{ full_name: '{element_full_name}' }})-[o:CONNECTS_IN]->(e:Element) RETURN e"
+        print(query)
+        results, meta = db.cypher_query(query, resolve_objects=resolve_objects)
+        return results
+
     def count_nodes_by_property(self, node_type, property_name, order="DESC"):
         query = f"MATCH (n:{node_type}) RETURN n.{property_name}, COUNT(n) AS count ORDER BY count {order}"
         results, meta = db.cypher_query(query, resolve_objects=False)

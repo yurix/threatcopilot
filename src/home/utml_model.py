@@ -4,7 +4,7 @@ import pytz
 
 
 from neomodel import (StructuredNode, StringProperty, IntegerProperty, DateTimeProperty,
-    UniqueIdProperty, RelationshipTo, RelationshipFrom)
+    UniqueIdProperty, RelationshipTo, RelationshipFrom, BooleanProperty)
 
 from src.home.vocabulary_model import Vocabulary, DataFlowVocabulary, StoreVocabulary, InteractorVocabulary, ProcessVocabulary, DataFlowTerm, StoreTerm, InteractorTerm, ProcessTerm
 
@@ -12,6 +12,7 @@ from src.home.vocabulary_model import Vocabulary, DataFlowVocabulary, StoreVocab
 class ThreatModel(StructuredNode):
     threat_model_uid = StringProperty()
     name = StringProperty()
+    finished = BooleanProperty(default=False)
     package = StringProperty()
     creation_date = DateTimeProperty(
         default=lambda: datetime.now(pytz.utc),
