@@ -1,0 +1,185 @@
+---
+name: POC Digital 2
+description: O produto POC Digital 2 consiste em aplicações web, Android e iOS cujo propósito é oferecer uma alternativa inteiramente eletrônica e on-line
+package: org.companya.poc2
+authors: 
+ - name: Autor b
+   mail: autorb@companya.org
+stakeholders:
+ - name: Stakeholder c
+   role: Product Manager
+   mail: stakeholderc@companya.org
+ - name: Stakeholder d
+   role: Project Manager
+   mail: stakeholderd@companyb.org
+version: 1.1
+threat_model_uid: org.companya.poc2.app
+product_id:
+
+interactors:
+  APSUser:
+    term: remote user
+    description: Operação do sistema por meio das APS e Central 135, Possui cadastro e operações.
+  
+  InternetUser:
+    term: remote user
+    description: Os Acessos de usuário de internet são intermediados pelo portal de atendimento no IOP que se comunicam com o QWE.
+
+  PartnerApplication:
+    term: remote user
+    description: empty
+  
+  Citizen:
+    term: remote user
+    description: empty
+
+processes:
+  QWE:
+    term: application server
+    description: empty
+
+  IOP:
+    term: application server
+    description: empty
+
+  APIGateway:
+    term: api gateway
+    description: empty
+  
+  QWEFileServer:
+    term: web server
+    description: FTP File Server
+
+  ZXCUploadOffline:
+    term: web server
+    description: empty
+
+stores:
+  SIIOPEDatabase:
+    term: oracle
+    description: empty
+
+  QWEScannedFile:
+    term: pdf
+    description: documentos escaneados
+
+  QWEQueue:
+    term: message queue
+    description: Recebe os arquivos
+
+
+dataflows:
+  
+  APSUserToQWE:
+    source_uid: org.companya.poc2.APSUser
+    destination_uid: org.companya.poc2.QWE
+    description: Request
+    term: http
+  
+  QWEToAPSUser:
+    source_uid: org.companya.poc2.QWE
+    destination_uid: org.companya.poc2.APSUser
+    description: Response
+    term: http
+  
+  CitizenToAPIGateway:
+    source_uid: org.companya.poc2.Citizen
+    destination_uid: org.companya.poc2.APIGateway
+    description: Request
+    term: http
+  
+  APIGatewayToCitizen:
+    source_uid: org.companya.poc2.APIGateway
+    destination_uid: org.companya.poc2.Citizen
+    description: Response
+    term: http
+
+  APIGatewayToQWE:
+    source_uid: org.companya.poc2.APIGateway
+    destination_uid: org.companya.poc2.QWE
+    description: Request
+    term: http
+  
+  QWEToAPIGateway:
+    source_uid: org.companya.poc2.QWE
+    destination_uid: org.companya.poc2.APIGateway
+    description: Response
+    term: http
+
+  InternetUserToIOP:
+    source_uid: org.companya.poc2.InternetUser
+    destination_uid: org.companya.poc2.IOP
+    description: Request
+    term: http
+  
+  IOPToInternetUser:
+    source_uid: org.companya.poc2.IOP
+    destination_uid: org.companya.poc2.InternetUser
+    description: Response
+    term: http
+
+  IOPToQWE:
+    source_uid: org.companya.poc2.IOP
+    destination_uid: org.companya.poc2.QWE
+    description: Request
+    term: http
+  
+  QWEToIOP:
+    source_uid: org.companya.poc2.QWE
+    destination_uid: org.companya.poc2.IOP
+    description: Response
+    term: http
+
+  PartnerApplicationToQWE:
+    source_uid: org.companya.poc2.PartnerApplication
+    destination_uid: org.companya.poc2.QWE
+    description: Request
+    term: soap
+  
+  QWEToPartnerApplication:
+    source_uid: org.companya.poc2.QWE
+    destination_uid: org.companya.poc2.PartnerApplication
+    description: Response
+    term: soap
+
+  QWEToSIIOPEDatabase:
+    source_uid: org.companya.poc2.QWE
+    destination_uid: org.companya.poc2.SIIOPEDatabase
+    description: Request
+    term: socket
+  
+  SIIOPEDatabaseToQWE:
+    source_uid: org.companya.poc2.SIIOPEDatabase
+    destination_uid: org.companya.poc2.QWE
+    description: Response
+    term: socket
+
+  QWEToQWEFileServer:
+    source_uid: org.companya.poc2.QWE
+    destination_uid: org.companya.poc2.QWEFileServer
+    description: Request
+    term: ftp
+  
+  QWEFileServerToQWE:
+    source_uid: org.companya.poc2.QWEFileServer
+    destination_uid: org.companya.poc2.QWE
+    description: Response
+    term: ftp
+
+  QWEFileServerToQWEScannedFile:
+    source_uid: org.companya.poc2.QWEFileServer
+    destination_uid: org.companya.poc2.QWEScannedFile
+    description: store
+    term: memory
+
+  SATUploadOfflineToQWEQueue:
+    source_uid: org.companya.poc2.SATUploadOffline
+    destination_uid: org.companya.poc2.QWEQueue
+    description: upload offline docs
+    term: mqtt
+
+  QWEToQWEQueue:
+    source_uid: org.companya.poc2.QWE
+    destination_uid: org.companya.poc2.QWEQueue
+    description: receive offline docs
+    term: mqtt

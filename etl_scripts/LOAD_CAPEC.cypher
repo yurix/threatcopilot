@@ -1,6 +1,3 @@
-// Insert CAPECs Catalog - Cypher Script
-
-// Insert External References for CAPECs
 WITH "/scripts/capec.json" as filesToImport
 UNWIND [filesToImport] AS files
 CALL apoc.load.json(files) YIELD value
@@ -12,36 +9,30 @@ FOREACH (reference IN value.Attack_Pattern_Catalog.External_References.External_
   r.Publication_Year = reference.Publication_Year, r.Publisher = reference.Publisher
 );
 
-// ------------------------------------------------------------------------
-// Insert CAPECs
 WITH "/scripts/capec.json" as filesToImport
 UNWIND [filesToImport] AS files
 CALL apoc.load.json(files) YIELD value
 UNWIND value.Attack_Pattern_Catalog.Attack_Patterns.Attack_Pattern AS capec
 
-// General Info for CAPECs Dataset
 MERGE (i:CAPEC {
   Name: value.Attack_Pattern_Catalog.Name, Version: value.Attack_Pattern_Catalog.Version,
   Date: value.Attack_Pattern_Catalog.Date, Schema: 'http://capec.mitre.org/data/xsd/ap_schema_v3.4.xsd'
 })
 
-// Insert Attack Patterns for CAPECs
 MERGE (cp:Attack {
   Name: 'CAPEC-' + capec.ID
 })
+
 SET cp.ExtendedName = capec.Name, cp.Abstraction = capec.Abstraction,
 cp.Status = capec.Status, cp.Description = coalesce(toStringOrNull(capec.Description), ' NOT SET '),
 cp.Likelihood_Of_Attack = capec.Likelihood_Of_Attack, cp.Typical_Severity = capec.Typical_Severity,
 cp.Alternate_Terms = [value IN capec.Alternate_Terms.Alternate_Term | value.Term],
-//cp.Examples = [value IN capec.Example_Instances.Example | apoc.convert.toString(value)],
-//cp.Notes = [value IN capec.Notes.Note | apoc.convert.toString(value)],
+
 cp.Submission_Date = capec.Content_History.Submission.Submission_Date,
 cp.Submission_Name = capec.Content_History.Submission.Submission_Name,
 cp.Submission_Organization = capec.Content_History.Submission.Submission_Organization
-//cp.Modifications = [value IN capec.Content_History.Modification | apoc.convert.toString(value)],
 MERGE (cp)-[:belongsTo]->(i)
 
-// Skills
 FOREACH (skill IN capec.Skills_Required.Skill |
   MERGE (con:AttackSkillRequired { Description: coalesce(toStringOrNull(skill.text),' NOT SET ')})
   SET con.Level = [value IN skill.Level | value] 

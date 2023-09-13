@@ -214,6 +214,17 @@ class RecommendationService:
             root_node.add_child(new_node)
         return tree
     
+    def save_recommended_threats(self, threat_model_uid, pairlist):
+         #TODO: Save unary decisions made by user to adopt colaborative filtering scoring
+         for threat_parms in pairlist:
+            threat_to_bind = threat_parms.split(":")
+            element_type = threat_to_bind[0]
+            element_uid = threat_to_bind[1]
+            threat_uid = threat_to_bind[2]
+            ElementService().bind_element_threat(element_type, element_uid, threat_uid)
+        
+    
+
     def recommendation_threats(self, threat_model_uid):
 
         threatmodel = ThreatModelService().find_by_id(threat_model_uid,resolve_objects=True)
@@ -225,9 +236,10 @@ class RecommendationService:
         all_threat_units = []
         for var in all_threat_models:
             for threat_model in var:
-                threat_units = self.threat_model_threat_units(threat_model.threat_model_uid)
-                for tu in threat_units:
-                    all_threat_units.append(tu)
+                if threat_model.finished == True:
+                    threat_units = self.threat_model_threat_units(threat_model.threat_model_uid)
+                    for tu in threat_units:
+                        all_threat_units.append(tu)
 
         print('Unidades de ameaças na base de conhecimento: ' + str(len(all_threat_units)))
         recommended_threats = list()
@@ -236,7 +248,7 @@ class RecommendationService:
                 if tm_tu.element_type == x_tu.element_type:
                     sim_name, sim_term, sim_io, similarity = tm_tu.similarity(x_tu)
                     print("Comparando " + str(tm_tu) + " com " + str(x_tu) + " : " + str(similarity))
-                    if similarity>0.4:
+                    if similarity>0.5:
                         threats = ElementService().find_element_threats(x_tu.element_type, x_tu.uid)
                         for x in threats:
                             for threat in x:
@@ -245,6 +257,7 @@ class RecommendationService:
                                     "element_uid": tm_tu.uid, 
                                     "element_type": tm_tu.element_type, 
                                     "element_name": tm_tu.name, 
+                                    "element_full_name": tm_tu.full_name, 
                                     "threat_uid": threat['ThreatID'], 
                                     "threat_name": threat['Name'], 
                                     "sim_name": sim_name,

@@ -67,6 +67,7 @@
       <table class="table table-hover">
           <thead>
               <tr>
+                  <th class="border-gray-200">Finished</th>
                   <th class="border-gray-200">ID</th>
                   <th class="border-gray-200">Name</th>			
                   <th class="border-gray-200">Package</th>			
@@ -80,6 +81,11 @@
                 {% set threatmodel = threatmodel[0] %}
                 
               <tr>
+                <td>
+                    <a href="#" class="fw-bold">
+                        {{threatmodel['finished']}}
+                    </a>
+                </td>
                   <td>
                       <a href="#" class="fw-bold">
                           {{threatmodel['threat_model_uid']}}
@@ -90,7 +96,7 @@
                       <span class="fw-normal">{% if threatmodel.package is not none %}{{threatmodel.package}}{% endif %}</span>
                   </td>
                   <td><span class="fw-normal">{% if threatmodel.creation_date is not none %}{{threatmodel.creation_date}}{% endif %}</span></td>                        
-                  <td><span class="fw-bold text-warning"><a href="/show/ThreatModel/threat_model_uid/{{threatmodel['threat_model_uid']}}">Details</a> [<a href="/threatmodel/{{threatmodel['threat_model_uid']}}/elements">Elements</a>] [<a href="/deletethreatmodel/{{threatmodel['threat_model_uid']}}">Delete</a>] [<a href="/recommend_threats/{{threatmodel['threat_model_uid']}}">Recommendations</a>]</span></td>                      
+                  <td><span class="fw-bold text-warning"><a href="/show/ThreatModel/threat_model_uid/{{threatmodel['threat_model_uid']}}">Details</a> [<a href="/threatmodel/{{threatmodel['threat_model_uid']}}/elements">Elements</a>] [<a href="/deletethreatmodel/{{threatmodel['threat_model_uid']}}">Delete</a>] [<a href="/recommend_threats/{{threatmodel['threat_model_uid']}}">Recommendations</a>] [<a href="/threatmodel/{{threatmodel['threat_model_uid']}}/report">Report</a>] [<a href="/threatmodel/{{threatmodel['threat_model_uid']}}/finish">Finish</a>] [<a href="/threatmodel/{{threatmodel['threat_model_uid']}}/reopen">ReOpen</a>]</span></td>                      
               </tr>
               {% endfor %}
               

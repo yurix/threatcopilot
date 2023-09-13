@@ -1,0 +1,2 @@
+MATCH (n) DETACH DELETE(n);
+DROP CONSTRAINT threatid_unique;

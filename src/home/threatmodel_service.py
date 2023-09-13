@@ -10,6 +10,8 @@ from neomodel import db
 from src.home.vocabulary_model import Vocabulary, DataFlowVocabulary, StoreVocabulary, InteractorVocabulary, ProcessVocabulary, DataFlowTerm, StoreTerm, InteractorTerm, ProcessTerm
 from src.home.vocabulary_service import VocabularyService
 from src.home.element_service import ElementService
+from src.home.threat_service import ThreatService
+
 import src.home.util as util
 
 config.DATABASE_URL = Config.NEO4J_URL
@@ -87,6 +89,16 @@ class ThreatModelService:
     
     def delete(self, threat_model_uid):
         query = f"MATCH (p:ThreatModel {{ threat_model_uid: '{threat_model_uid}' }})-[r]-(g) DETACH delete g, r, p"
+        results, meta = db.cypher_query(query, resolve_objects=False)
+        return results
+    
+    def finish(self, threat_model_uid):
+        query = f"MATCH (p:ThreatModel {{ threat_model_uid: '{threat_model_uid}' }}) SET p.finished = true"
+        results, meta = db.cypher_query(query, resolve_objects=False)
+        return results
+    
+    def reopen(self, threat_model_uid):
+        query = f"MATCH (p:ThreatModel {{ threat_model_uid: '{threat_model_uid}' }}) SET p.finished = false"
         results, meta = db.cypher_query(query, resolve_objects=False)
         return results
     
@@ -179,6 +191,11 @@ class ThreatModelService:
             managed_dataflows = []
             self.parse_dataflows(dataflows, managed_dataflows)
             self.parse_relations(dataflows)
+        
+        print('Finalizado! Processando threats...')          
+        if 'threatflows' in utml_data:
+            threatflows = utml_data['threatflows']
+            self.parse_threatflows(threatflows)
 
     def parse_relations(self, dataflows):
         if dataflows:
@@ -253,9 +270,18 @@ class ThreatModelService:
                 dataflow_term = DataFlowTerm.nodes.get_or_none(name=current_obj.term)
                 if dataflow_term is not None:
                     current_obj.dataflow_term.connect(dataflow_term)
+    
+    def parse_threatflows(self, threatflows):
+        if threatflows:
+            for threatflow in threatflows:
+                print ( threatflow )
+                element = self.find_in_all_dfd_nodes(threatflow['element_uid'])
+                print ( element )
+                for threat in threatflow['threats']:
+                    print ( threat ['threat_uid'] )
+                    ElementService().bind_element_threat(element.dtype,element.uid,threat ['threat_uid'])
 
     def find_in_all_dfd_nodes(self, full_name):
-        print(full_name)
         result = Interactor.nodes.get_or_none(full_name=full_name)
         if result is None:
             result = Process.nodes.get_or_none(full_name=full_name)

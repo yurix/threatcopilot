@@ -1,0 +1,56 @@
+<html lang="en">
+<head> 
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Threat Copilot - {% block title %}{% endblock %}
+</title>
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({ startOnLoad: true });
+</script>
+</head>
+<body>
+  <br/>
+    {% macro render_relation(node, relation) -%}
+        {% set start_start_dtype = '((' %}
+        {% set start_end_dtype = '))' %}
+        {% set end_start_dtype = '((' %}
+        {% set end_end_dtype = '))' %} 
+        {% if node.dtype == 'Interactor' %}
+            {% set start_start_dtype = '[' %}
+            {% set start_end_dtype = ']' %}
+        {% elif node.dtype == 'Store' %}
+            {% set start_start_dtype = '[(' %}
+            {% set start_end_dtype = ')]' %}
+        {% endif %}
+        {% if relation.end_dtype == 'Interactor' %}
+            {% set end_start_dtype = '[' %}
+            {% set end_end_dtype = ']' %}
+        {% elif relation.end_dtype == 'Store' %}
+            {% set end_start_dtype = '[(' %}
+            {% set end_end_dtype = ')]' %}
+        {% endif %}
+        {{node.dfid}}{{start_start_dtype}}"{{node.name}}\n<small>{{node.term}}</small>"{{start_end_dtype}}:::{{node.dtype}} --"{{relation.term}}"--> {{relation.end_dfid}}{{end_start_dtype}}"{{relation.end_name}}\n<small>{{relation.end_term}}</small>"{{end_end_dtype}}:::{{relation.end_dtype}}
+        {{ caller() }}
+    {%- endmacro %}
+    <pre id="image" class="mermaid">
+      %%{init: {"flowchart": {"htmlLabels": true}} }%%
+      flowchart LR
+      {% for node in nodes_dfd %}
+          {%for relation in node.relations %}
+           {% call render_relation(node,relation) %}
+           {% endcall %}
+          {% endfor %}
+      {% endfor %}
+      classDef Process fill:#ECECFF
+      classDef Interactor fill:#D0AEAD,stroke:#FFE5E5
+      classDef Store fill:#A7A8CD,stroke:#454555
+      classDef ProcessThreatened stroke:#f00
+      classDef InteractorThreatened stroke:#0f0
+      classDef StoreThreatened stroke:#00f
+
+  </pre>
+</body>
+
+
+</html>

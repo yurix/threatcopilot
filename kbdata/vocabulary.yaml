@@ -39,43 +39,51 @@ interactors:
       - name: actuator
       - name: iot node
   - name: event
+
 processes:
   - name: server
     children:
       - name: web server
+      - name: authentication server
       - name: application server
-      - name: proxy
         children:
-          - name: API Gateway
-          - name: Web Application Firewall
-          - name: Load Balancer
-          - name: Router
-  - name: application
+          - name: web application
+            children:
+              - name: frontend
+              - name: backend
+                children:
+                  - name: controller
+                  - name: view
+                  - name: service
+                    children:
+                      - name: action
+                      - name: api
+                        children:
+                          - name: REST
+                          - name: SOAP
+                          - name: EJB
+  - name: mobile
     children:
-      - name: mobile application
-        children:
-          - name: android application
-          - name: ios application
-      - name: cloud application
-      - name: desktop application
-      - name: embbeded application
-  - name: operating system
-    children:
-      - name: Linux Operating System
-      - name: Windows Operating System
-      - name: MACOS Operating System
-  - name: integration
-    children:
-      - name: API
-      - name: EJB
-      - name: Web Service 
-      - name: Enterprise Service Bus
-  - name: network security
+      - name: android application
+      - name: ios application
+
+  - name: network
     children:
       - name: firewall
+      - name: router
+      - name: WAF
+      - name: Load Balancer
 
 flows:
   - name: memory
+  - name: authentication
+    children:
+      - name: oauth
+      - name: radius
+      - name: tacacs
+      - name: cas
+      - name: kerberos
+
   - name: network_protocol
     children:
       - name: socket

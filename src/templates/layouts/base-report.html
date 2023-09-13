@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head> 
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Threat Copilot - {% block title %}{% endblock %}
+</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="title" content="Threat Copilot">
+<meta name="author" content="Yuri Feitosa Negocio">
+<meta name="description" content="Threat Copilot">
+<meta name="keywords" content="threat, security, threat modeling, modeling, vulnerability, attack, weakness, capec, cwe" />
+<link rel="canonical" href="hThreat Copilot">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="Threat Copilot">
+<meta property="og:title" content="Threat Copilot">
+<meta property="og:description" content="Threat Copilot">
+<meta property="og:image" content="Threat Copilot">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="Threat Copilot">
+<meta property="twitter:title" content="Threat Copilot">
+<meta property="twitter:description" content="Threat Copilot">
+<meta property="twitter:image" content="Threat Copilot">
+
+<!-- Favicon -->
+<link rel="apple-touch-icon" sizes="120x120" href="{{ config.ASSETS_ROOT }}/img/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="{{ config.ASSETS_ROOT }}/img/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="{{ config.ASSETS_ROOT }}/img/favicon/favicon-16x16.png">
+<link rel="manifest" href="{{ config.ASSETS_ROOT }}/img/favicon/site.webmanifest">
+<link rel="mask-icon" href="{{ config.ASSETS_ROOT }}/img/favicon/safari-pinned-tab.svg" color="#ffffff">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="theme-color" content="#ffffff">
+
+<link type="text/css" href="{{ config.ASSETS_ROOT }}/vendor/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet">
+
+<link type="text/css" href="{{ config.ASSETS_ROOT }}/vendor/notyf/notyf.min.css" rel="stylesheet">
+<link type="text/css" href="{{ config.ASSETS_ROOT }}/css/volt.css" rel="stylesheet">
+<!-- Specific Page JS goes HERE  -->    
+{% block stylesheets %}{% endblock stylesheets %}
+
+</head>
+<body>
+  {% block content %}{% endblock content %} 
+  {% include 'includes/scripts.html' %}
+  {% block javascripts %}{% endblock javascripts %}  
+</body>
+</html>

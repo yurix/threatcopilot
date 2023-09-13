@@ -15,6 +15,7 @@ Figura. Arquitetura e Tela do Threat Copilot
 * Python 3.9 ou superior
 * Neo4J 5.9.0 ou superior
 * Google Chrome 114 ou similar (Suporte a Javascript)
+* ChromeWebDriver
 
 # Instalação (Linux)
 1. Realize o download do branch principal do projeto
@@ -56,7 +57,6 @@ Para preparar para o uso é necessário realizar uma carga inicial ETL via Cyphe
 ```
 etl_scripts/LOAD_ASSETS.cypher
 etl_scripts/LOAD_CAPEC.cypher
-etl_scripts/LOAD_CPE.cypher
 etl_scripts/LOAD_CWE.cypher
 etl_scripts/LOAD_ORGS_PRODUCTS.cypher
 etl_scripts/LOAD_THREATS.cypher
@@ -67,8 +67,13 @@ etl_scripts/LOAD_THREATS_MTC.cypher
 ## Carga dos Dados no Threat Copilot
 
 1. Realize a carga do vocabulário (/kbdata/vocabulary.yml)
+ <img src="media/load_vocabulary.png" width="500"/>
+
+2. Realize a carga dos modelos de ameaça em UTML
+ <img src="media/load_threatmodel.png" width="500"/>
 
 # Prova de Conceito
+Os dados dos modelos de ameaça foram anonimizados. Por ventura, podem representar algumas diferenças. 
 
 # Para Desenvolvimento
 
@@ -101,4 +106,5 @@ gunicorn --config ./gunicorn-cfg.py --reload run:app
 * NEGOCIO, Y. F., HERTHEL, N. T., MEDEIROS, J. D. Threat Copilot: Um sistemas de recomedação para modelagem de ameaças. VII Salão de Ferramentas. XXIII Simpósio Brasileiro em Segurança da Informação e de Sistemas Computacionais. 2023. 
 
 # Dúvidas e Sugestões
-negocio.yuri@academico.ifpb.edu.br
+- negocio.yuri@academico.ifpb.edu.br
+- yurinegocio@gmail.com

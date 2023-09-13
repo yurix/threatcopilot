@@ -1,0 +1,150 @@
+---
+name: POC Digital 1
+description: O produto POC Digital 1 consiste em aplicações web, Android e iOS cujo propósito é oferecer uma alternativa inteiramente eletrônica e on-line
+package: org.companya.poc1
+authors: 
+ - name: Autor A
+   mail: autora@companya.org
+stakeholders:
+ - name: Stakeholder A
+   role: Product Manager
+   mail: stakeholdera@companya.org
+ - name: Stakeholder B
+   role: Project Manager
+   mail: stakeholderb@companyb.org
+version: 1.2
+threat_model_uid: org.companya.poc1.app
+product_id:
+
+interactors:
+  Citizen:
+    term: remote user
+    description: empty
+
+processes:
+  AppWXYZ:
+    term: mobile application
+    description: empty
+  APIGateway:
+    term: api gateway
+    description: empty
+  OperatingSystem:
+    term: mobile operating system
+    description: empty
+  BackendWXYZ:
+    term: application server
+    description: empty
+  ABCD_ZV:
+    term: application server
+    description: empty
+  Statement_ABCD:
+    term: application server
+    description: empty
+  JGuest:
+    term: application server
+    description: empty
+
+stores:
+  WXYZDigitalPDF:
+    term: file
+    description: arquivo contendo informações de documento
+
+dataflows:
+  CitizenToAppWXYZ:
+    source_uid: org.companya.poc1.Citizen
+    destination_uid: org.companya.poc1.AppWXYZ
+    description: Request
+    term: memory
+  AppWXYZToCitizen:
+    source_uid: org.companya.poc1.AppWXYZ
+    destination_uid: org.companya.poc1.Citizen
+    description: Response
+    term: http
+  AppWXYZToOperatingSystem:
+    source_uid: org.companya.poc1.AppWXYZ
+    destination_uid: org.companya.poc1.OperatingSystem
+    description: Request
+    term: memory
+  OperatingSystemToAppWXYZ:
+    source_uid: org.companya.poc1.OperatingSystem
+    destination_uid: org.companya.poc1.AppWXYZ
+    description: Response
+    term: memory
+  AppWXYZToWXYZDigitalPDF:
+    source_uid: org.companya.poc1.AppWXYZ
+    destination_uid: org.companya.poc1.WXYZDigitalPDF
+    description: Request
+    term: memory
+  WXYZDigitalPDFToAppWXYZ:
+    source_uid: org.companya.poc1.WXYZDigitalPDF
+    destination_uid: org.companya.poc1.AppWXYZ
+    description: Response
+    term: memory
+  APIGatewayToAppWXYZ:
+    source_uid: org.companya.poc1.APIGateway
+    destination_uid: org.companya.poc1.AppWXYZ
+    description: request
+    term: http
+  AppWXYZToAPIGateway:
+    source_uid: org.companya.poc1.AppWXYZ
+    destination_uid: org.companya.poc1.APIGateway
+    description: response
+    term: http
+  APIGatewayToBackendWXYZ:
+    source_uid: org.companya.poc1.APIGateway
+    destination_uid: org.companya.poc1.BackendWXYZ
+    description: request
+    term: http
+  BackendWXYZToAPIGateway:
+    source_uid: org.companya.poc1.BackendWXYZ
+    destination_uid: org.companya.poc1.APIGateway
+    description: response
+    term: http
+  BackendWXYZToABCD_ZV:
+    source_uid: org.companya.poc1.BackendWXYZ
+    destination_uid: org.companya.poc1.ABCD_ZV
+    description: request
+    term: rmi
+  ABCD_ZVToBackendWXYZ:
+    source_uid: org.companya.poc1.ABCD_ZV
+    destination_uid: org.companya.poc1.BackendWXYZ
+    description: response
+    term: rmi
+  BackendWXYZToStatement_ABCD:
+    source_uid: org.companya.poc1.BackendWXYZ
+    destination_uid: org.companya.poc1.Statement_ABCD
+    description: request
+    term: rmi
+  Statement_ABCDToBackendWXYZ:
+    source_uid: org.companya.poc1.Statement_ABCD
+    destination_uid: org.companya.poc1.BackendWXYZ
+    description: response
+    term: rmi
+  BackendWXYZToJGuest:
+    source_uid: org.companya.poc1.BackendWXYZ
+    destination_uid: org.companya.poc1.JGuest
+    description: request
+    term: rmi
+  JGuestToBackendWXYZ:
+    source_uid: org.companya.poc1.JGuest
+    destination_uid: org.companya.poc1.BackendWXYZ
+    description: response
+    term: rmi
+
+threatflows:
+  - element_uid: org.companya.poc1.APIGateway
+    threats:
+      - threat_uid: DTP-1
+      - threat_uid: DTP-2
+      - threat_uid: DTP-3
+      - threat_uid: DTP-4
+      - threat_uid: DTP-5
+      - threat_uid: DTP-6
+      - threat_uid: DTP-7
+  - element_uid: org.companya.poc1.BackendWXYZ
+    threats:
+      - threat_uid: DTP-1
+      - threat_uid: DTP-2
+
+  
+   

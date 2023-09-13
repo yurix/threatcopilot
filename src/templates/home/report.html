@@ -1,0 +1,69 @@
+
+{% extends "layouts/base-report.html" %}
+
+{% block title %} Load Vocabulary {% endblock %} 
+
+{% block stylesheets %}
+    <link type="text/css" href="{{ config.ASSETS_ROOT }}/css/style.css" rel="stylesheet">
+{% endblock stylesheets %}
+
+{% block content %}
+
+
+<div class="container">
+    <div class="row align-items-center">
+        <div class="col">
+            <button id="runBtn" onClick="window.history.go(-1);">Back</button>
+            <button id="runBtn" onClick="run()">Convert</button>
+        </div>
+        <div class="col">
+            <button id="printBtn" onClick="save()">Save</button>
+            <button id="printBtn" onClick="print()">Print</button>
+        </div>
+    </div>
+    <div class="row align-items-center">
+      <div class="col">
+       <textarea class="form-control" style="height: 95vh; overflow-y: auto;" id="sourceTA">
+
+#Relatório de Ameaças
+```
+Classificação: Divulgação Privada
+```
+
+## Objetivo
+
+Identificar as ameaças ao produto de software sob análise e recomendar controles de segurança necessários. 
+
+##Produto 
+
+asdasdhuasuhdhuashudhuashdashudsa
+
+### Lista de Ameaças
+{% for threat in report.threats %}
+###{{threat.ThreatID}}: {{threat.Name}}
+{{threat.ThreatDescription}}
+{% if threat.elements is not none %}
+Elementos Ameaçados:
+{% for element in threat.elements %}- {{element.dtype}}: {{element.full_name}}
+{% endfor %}{% endif %}
+{% if threat.cwes is not none %}
+Referências:
+{% for cwe in threat.cwes %}- {{cwe.Name}}: {{cwe.Extended_Name}} <https://cwe.mitre.org/data/definitions/{{cwe.number}}.html>
+{% endfor %}{% endif %}
+{% endfor %}
+</textarea>
+      </div>
+      <div class="col input-group">
+        <div style="height: 95vh; overflow-y: auto;" id="targetDiv"></div>
+      </div>
+      
+    </div>
+  </div>
+{% endblock content %}
+
+  <!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+    <script src="https://cdn.rawgit.com/showdownjs/showdown/2.1.0/dist/showdown.min.js"></script>
+    <script src="{{ config.ASSETS_ROOT }}/js/editor.js"></script>  
+{% endblock javascripts %}
+

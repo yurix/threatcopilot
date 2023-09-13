@@ -9,6 +9,8 @@ ENV DEBUG True
 RUN mkdir /app
 WORKDIR /app
 
+RUN apt-get install chromium-driver
+
 COPY requirements.txt .
 
 RUN cat requirements.txt

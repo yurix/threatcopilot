@@ -23,13 +23,12 @@ class ElementService:
         results, meta = db.cypher_query(query, resolve_objects=False)
         return results
     
-    def bind_element_threat(self, element_type, element_id, threat_id):
-        query = f"MATCH  (e:{element_type} {{ uid: '{element_id}'}}), (t:Threat {{ ThreatID: '{threat_id}' }}) MERGE (e)-[:related]->(t)"
-        print(query)
+    def bind_element_threat(self, element_type, element_uid, threat_id):
+        query = f"MATCH  (e:{element_type} {{ uid: '{element_uid}'}}), (t:Threat {{ ThreatID: '{threat_id}' }}) MERGE (e)-[:related]->(t)"
         results, meta = db.cypher_query(query, resolve_objects=False)
         return results
     
-    def find_element_threats(self, element_type, uid,resolve_objects=False):
+    def find_element_threats(self, element_type, uid, resolve_objects=False):
         query = f"MATCH (e:{element_type} {{ uid: '{uid}' }})-[:related]->(t:Threat) RETURN t"
         results, meta = db.cypher_query(query, resolve_objects=resolve_objects)
         return results

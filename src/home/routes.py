@@ -23,13 +23,13 @@ from src.home.node_service import NodeService
 from src.home.threatmodel_service import ThreatModelService
 from src.home.element_service import ElementService
 from src.home.recommendation_service import RecommendationService
+from src.home.report_service import ReportService
 
 import src.home.util as util
 
 
-from flask import Flask
+from flask import Flask, Response, send_file
 import traceback
-
 import yaml
 
 app = Flask(__name__)
@@ -339,7 +339,22 @@ def recommend_threats(threat_model_uid):
     try:
         recommended_threats = RecommendationService().recommendation_threats(threat_model_uid)
         
-        return render_template("home/recommended_threats.html",recommended_threats=recommended_threats)
+        return render_template("home/recommended_threats.html",threat_model_uid=threat_model_uid,recommended_threats=recommended_threats)
+
+    except Exception as e:
+        traceback.print_exc()
+        return render_template('home/page-500.html'), 500
+
+@blueprint.route('/save_recommended_threats/<string:threat_model_uid>', methods=['POST'])
+def save_recommended_threats(threat_model_uid):
+    try:
+        form_threats = request.form.getlist('threats')
+
+        RecommendationService().save_recommended_threats(threat_model_uid,form_threats)
+        
+        report = ReportService().get_threat_report(threat_model_uid)
+        
+        return render_template("home/report.html",threat_model_uid=threat_model_uid, report=report)
 
     except Exception as e:
         traceback.print_exc()
@@ -460,7 +475,7 @@ def deletethreatmodel(threat_model_uid):
         query = None
        
         ThreatModelService().delete(threat_model_uid)
-        threatmodels = ThreatService().load(limit=1000)
+        threatmodels = ThreatModelService().load(limit=1000)
         total = 0
         if util.safe_is_empty_list(threatmodels) is False: 
             total = len(threatmodels[0])
@@ -468,6 +483,44 @@ def deletethreatmodel(threat_model_uid):
             total = 0
         return render_template("home/threatmodels.html",threatmodels=threatmodels, total=total, last_query=query)
 
+
+    except Exception as e:
+        traceback.print_exc()
+        return render_template('home/page-500.html'), 500
+
+@blueprint.route('/threatmodel/<string:threat_model_uid>/finish', methods=['GET', 'POST'])
+def finishhreatmodel(threat_model_uid):
+    try:
+        threats = None
+        query = None
+       
+        ThreatModelService().finish(threat_model_uid)
+        threatmodels = ThreatModelService().load(limit=1000)
+        total = 0
+        if util.safe_is_empty_list(threatmodels) is False: 
+            total = len(threatmodels[0])
+        else: 
+            total = 0
+        return render_template("home/threatmodels.html",threatmodels=threatmodels, total=total, last_query=query)
+    
+    except Exception as e:
+        traceback.print_exc()
+        return render_template('home/page-500.html'), 500
+
+@blueprint.route('/threatmodel/<string:threat_model_uid>/reopen', methods=['GET', 'POST'])
+def reopenthreatmodel(threat_model_uid):
+    try:
+        threats = None
+        query = None
+       
+        ThreatModelService().reopen(threat_model_uid)
+        threatmodels = ThreatModelService().load(limit=1000)
+        total = 0
+        if util.safe_is_empty_list(threatmodels) is False: 
+            total = len(threatmodels[0])
+        else: 
+            total = 0
+        return render_template("home/threatmodels.html",threatmodels=threatmodels, total=total, last_query=query)
 
     except Exception as e:
         traceback.print_exc()
@@ -492,6 +545,64 @@ def elements(threat_model_uid):
             total = 0
         
         return render_template("home/elements.html",elements=elements, total=total, last_query=query, nodes_dfd=nodes_dfd)
+
+    except Exception as e:
+        traceback.print_exc()
+        return render_template('home/page-500.html'), 500
+
+
+@blueprint.route('/threatmodel/<string:threat_model_uid>/png', methods=['GET', 'POST'])
+def report_png(threat_model_uid):
+    try:
+        #TODO
+        #driver.get('http://localhost:5005/threatmodel/'+threat_model_uid+'/dfd')
+        #dfdpng = driver.get_screenshot_as_png()
+        #driver.quit()
+        #buffer = BytesIO()
+        #buffer.write(dfdpng)
+        #buffer.seek(0)
+
+        return Response()
+
+    except Exception as e:
+        traceback.print_exc()
+        return render_template('home/page-500.html'), 500
+
+@blueprint.route('/threatmodel/<string:threat_model_uid>/dfd', methods=['GET', 'POST'])
+def report_dfd(threat_model_uid):
+    try:
+        elements = None
+        query = None
+        if request.method == 'GET': 
+            elements = ThreatModelService().find_threatmodel_elements(threat_model_uid)
+        else:
+            query = request.form['query']
+            elements = ThreatModelService().find_threatmodel_elements_with_query(threat_model_uid, query)
+        
+        nodes_dfd = ThreatModelService().render_dfd(threat_model_uid)
+
+        if util.safe_is_not_empty_list(elements): 
+            total = len(elements[0])
+        else: 
+            total = 0
+        
+        return render_template("home/report-svg.html",elements=elements, total=total, last_query=query, nodes_dfd=nodes_dfd)
+
+    except Exception as e:
+        traceback.print_exc()
+        return render_template('home/page-500.html'), 500
+
+
+@blueprint.route('/threatmodel/<string:threat_model_uid>/report', methods=['GET', 'POST'])
+def report(threat_model_uid):
+    try:
+        elements = None
+        query = None
+       
+        report = ReportService().get_threat_report(threat_model_uid)
+        
+        return render_template("home/report.html",threat_model_uid=threat_model_uid, report=report)
+        
 
     except Exception as e:
         traceback.print_exc()
