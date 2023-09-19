@@ -1,0 +1,28 @@
+{
+  "organizations": [
+    {
+      "name": "Empresa de Testes",
+      "acronym": "TESTES",
+      "products": [
+      	{
+      	   "productid": "PRODUTOA",
+      	   "name": "PRODUTOA",
+      	   "description": "Sistema de Folha de Pagamento"
+      	},{
+      	   "productid": "PRODUTOB",
+      	   "name": "PRODUTOB",
+      	   "description": "Sistema de Processo Eletronico"
+      	},{
+      	   "productid": "PRODUTOC",
+      	   "name": "PRODUTOC",
+      	   "description": "Sistema de Páginas Amarelas"
+      	},{
+      	   "productid": "PRODUTOD",
+      	   "name": "PRODUTOD",
+      	   "description": "Sistema de Ponto Eletronico"
+      	}
+      ]
+    }
+  ]
+}
+
