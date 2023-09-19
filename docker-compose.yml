@@ -4,7 +4,7 @@ services:
   neo4j:
     container_name: neo4j
     restart: always
-    image: "neo4j:latest"
+    image: "neo4j:5.9.0"
     environment:
       - "NEO4J_AUTH=neo4j/your_password"
       - 'NEO4J_PLUGINS=["apoc"]'
@@ -45,5 +45,3 @@ networks:
     driver: bridge
   web_network:
     driver: bridge
-    
-    
